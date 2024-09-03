@@ -1,7 +1,7 @@
 {
     "name": "Authenticator",
     "short_name": "Authenticator",
-    "start_url": "index.html",
+    "start_url": "/authenticator/",
     "display": "standalone",
     "background_color": "#f4f4f9",
     "theme_color": "#f4f4f9",
