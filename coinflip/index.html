@@ -37,6 +37,13 @@
             opacity: 1;
             outline: none; /* Remove default outline */
             user-select: none; /* Prevent text selection on double-click */
+			-webkit-user-select: none; /* Safari */
+			-moz-user-select: none; /* Firefox */
+			-ms-user-select: none; /* Internet Explorer/Edge */
+			user-drag: none; /* Prevent image dragging */
+			touch-action: manipulation; /* Prevent default touch actions */
+			-webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
         }
         #coin:focus {
             outline: none; /* Ensure no outline on focus */
@@ -128,11 +135,6 @@
 						// Play the success sound
 						successSound.currentTime = 0; // Reset sound to start
 						successSound.play(); // Play the sound
-
-						// Vibrate the phone (200 milliseconds)
-						if (navigator.vibrate) {
-							navigator.vibrate(200);
-						}
 
 						// Fade in the coin after switching images
 						coin.style.opacity = 1;
