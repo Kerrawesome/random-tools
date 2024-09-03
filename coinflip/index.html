@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="/coinflip/manifest.json">
     <link rel="icon" href="https://em-content.zobj.net/source/twitter/348/coin_1fa99.png" type="image/png">
+	<audio id="success-sound" src="https://themushroomkingdom.net/sounds/wav/smb3/smb3_nspade_match.wav" preload="auto"></audio>
     <title>Coin Flip</title>
     <style>
         body {
@@ -88,63 +89,73 @@
     </div>
 
     <script>
-        const coin = document.getElementById('coin');
-        const result = document.getElementById('result');
-        let isFlipping = false; // Flag to control click during flipping
+	const coin = document.getElementById('coin');
+	const result = document.getElementById('result');
+	const successSound = document.getElementById('success-sound'); // Get the audio element
+		let isFlipping = false; // Flag to control click during flipping
 
-        // Images URLs (local paths)
-        const headsURL = 'heads.png';
-        const tailsURL = 'tails.png';
+		// Images URLs (local paths)
+		const headsURL = 'heads.png';
+		const tailsURL = 'tails.png';
 
-        // Function to flip the coin
-        function flipCoin() {
-            if (isFlipping) return; // Prevent further clicks during flip
-            isFlipping = true; // Set flipping state
-            coin.classList.add('spin');
-            result.style.opacity = 0; // Hide result text smoothly
+		// Function to flip the coin
+		function flipCoin() {
+			if (isFlipping) return; // Prevent further clicks during flip
+			isFlipping = true; // Set flipping state
+			coin.classList.add('spin');
+			result.style.opacity = 0; // Hide result text smoothly
 
-            // Fetch random number from random.org
-            fetch('https://www.random.org/integers/?num=1&min=0&max=1&col=1&base=10&format=plain&rnd=new')
-                .then(response => response.text())
-                .then(data => {
-                    // Fade out the coin before switching images
-                    coin.style.opacity = 0;
+			// Fetch random number from random.org
+			fetch('https://www.random.org/integers/?num=1&min=0&max=1&col=1&base=10&format=plain&rnd=new')
+				.then(response => response.text())
+				.then(data => {
+					// Fade out the coin before switching images
+					coin.style.opacity = 0;
 
-                    setTimeout(() => {
-                        // Update coin image and result text based on API response
-                        if (data.trim() === '0') {
-                            coin.src = tailsURL; // Tails
-                            result.textContent = 'TAILS';
-                        } else {
-                            coin.src = headsURL; // Heads
-                            result.textContent = 'HEADS';
-                        }
-                        
-                        // Update code output to show the random number
-                        codeOutput.innerHTML = `Number generated: <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">${data.trim()}</span>`;
+					setTimeout(() => {
+						// Update coin image and result text based on API response
+						if (data.trim() === '0') {
+							coin.src = tailsURL; // Tails
+							result.textContent = 'TAILS';
+						} else {
+							coin.src = headsURL; // Heads
+							result.textContent = 'HEADS';
+						}
+						
+						// Update code output to show the random number
+						codeOutput.innerHTML = `Number generated: <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">${data.trim()}</span>`;
 
-                        // Fade in the coin after switching images
-                        coin.style.opacity = 1;
-                        result.style.opacity = 1; // Show result text smoothly
-                        coin.classList.remove('spin'); // Stop spinning after showing the result
-                        isFlipping = false; // Re-enable clicking after animation
-                    }, 300); // Delay image change to allow fade-out (0.3s matches opacity transition)
-                })
-                .catch(error => {
-                    result.textContent = 'Error: Could not fetch random number!';
-                    result.style.opacity = 1; // Show error message
-                    codeOutput.textContent = 'Output: Error';
-                    console.error('Error fetching random number:', error);
-                    coin.classList.remove('spin'); // Stop spinning on error
-                    isFlipping = false; // Re-enable clicking even on error
-                });
-        }
+						// Play the success sound
+						successSound.currentTime = 0; // Reset sound to start
+						successSound.play(); // Play the sound
 
-        // Initial display of heads side
-        coin.src = headsURL;
+						// Vibrate the phone (200 milliseconds)
+						if (navigator.vibrate) {
+							navigator.vibrate(200);
+						}
 
-        // Add event listener to the coin image
-        coin.addEventListener('click', flipCoin);
+						// Fade in the coin after switching images
+						coin.style.opacity = 1;
+						result.style.opacity = 1; // Show result text smoothly
+						coin.classList.remove('spin'); // Stop spinning after showing the result
+						isFlipping = false; // Re-enable clicking after animation
+					}, 300); // Delay image change to allow fade-out (0.3s matches opacity transition)
+				})
+				.catch(error => {
+					result.textContent = 'Error: Could not fetch random number!';
+					result.style.opacity = 1; // Show error message
+					codeOutput.textContent = 'Output: Error';
+					console.error('Error fetching random number:', error);
+					coin.classList.remove('spin'); // Stop spinning on error
+					isFlipping = false; // Re-enable clicking even on error
+				});
+		}
+
+		// Initial display of heads side
+		coin.src = headsURL;
+
+		// Add event listener to the coin image
+		coin.addEventListener('click', flipCoin);
     </script>
 </body>
 </html>
