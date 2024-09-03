@@ -1,0 +1,15 @@
+{
+    "name": "Kerrawesome's Tools",
+    "short_name": "Kerrawesome's Tools",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#f4f4f9",
+    "theme_color": "#f4f4f9",
+    "icons": [
+        {
+            "src": "https://em-content.zobj.net/source/emoji-one/104/hammer-and-wrench_1f6e0.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
