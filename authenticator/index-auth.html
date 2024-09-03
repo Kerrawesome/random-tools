@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <title>Authenticator</title>
+    <link rel="icon" href="https://em-content.zobj.net/source/microsoft/407/old-key_1f5dd-fe0f.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        select, input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 250px;
+        }
+        .otp {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .timer-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            width: 200px;
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .progress {
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0s;
+        }
+        .copied-indicator {
+            display: none;
+            color: green;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Authenticator</h1>
+    <select id="keySelection">
+        <option value="default">Default Key</option>
+        <option value="custom">Pick a Custom Key</option>
+    </select>
+    <input type="text" id="secret" placeholder="Enter Secret Key" style="display: none;">
+    <p id="otpOutput" class="otp" title="Click to copy OTP">Your OTP will appear here.</p>
+    <div class="timer-container">
+        <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+        </div>
+        <span id="timerOutput">30s</span>
+    </div>
+    <p id="copiedIndicator" class="copied-indicator">Copied!</p>
+
+    <script>
+        const defaultSecret = 'sjxc2tb27nvahqv6qyz3dxynsvivsch7';
+
+        // Helper function to decode base32 secret
+        function base32ToUint8Array(base32) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+            const padding = '='.repeat((8 - (base32.length % 8)) % 8);
+            const base32Cleaned = base32.toUpperCase().replace(/[^A-Z2-7]/g, '') + padding;
+            const binaryString = base32Cleaned.split('').map(char => {
+                const index = alphabet.indexOf(char);
+                return index.toString(2).padStart(5, '0');
+            }).join('');
+            const bytes = new Uint8Array(binaryString.match(/.{1,8}/g).map(byte => parseInt(byte, 2)));
+            return bytes;
+        }
+
+        // Function to generate HMAC-SHA1 hash
+        async function hmacSha1(key, counter) {
+            const keyBytes = base32ToUint8Array(key);
+            const counterBytes = new Uint8Array(new ArrayBuffer(8));
+            new DataView(counterBytes.buffer).setUint32(4, counter, false);
+
+            const cryptoKey = await crypto.subtle.importKey(
+                'raw',
+                keyBytes,
+                { name: 'HMAC', hash: 'SHA-1' },
+                false,
+                ['sign']
+            );
+
+            const signature = await crypto.subtle.sign('HMAC', cryptoKey, counterBytes);
+            return new Uint8Array(signature);
+        }
+
+        // Function to generate OTP
+        async function generateOtp(secret) {
+            const epoch = Math.floor(new Date().getTime() / 1000);
+            const time = Math.floor(epoch / 30);
+
+            const hmac = await hmacSha1(secret, time);
+            const offset = hmac[hmac.length - 1] & 0xf;
+            const otp =
+                ((hmac[offset] & 0x7f) << 24 |
+                (hmac[offset + 1] & 0xff) << 16 |
+                (hmac[offset + 2] & 0xff) << 8 |
+                (hmac[offset + 3] & 0xff)) %
+                1000000;
+            return otp.toString().padStart(6, '0');
+        }
+
+        let intervalId;
+
+        function updateTimer() {
+		const epoch = new Date().getTime() / 1000;
+		const timeRemaining = 30 - (epoch % 30);
+		document.getElementById('timerOutput').innerText = `${Math.floor(timeRemaining)}s`;
+		document.getElementById('progress').style.width = `${(timeRemaining / 30) * 100}%`;
+
+		// Use requestAnimationFrame to continuously update the timer and progress bar
+		requestAnimationFrame(updateTimer);
+		}
+
+        function startGeneratingOtp() {
+            const secret = getSecretKey();
+            if (secret) {
+                clearInterval(intervalId); // Clear any previous intervals
+                generateAndDisplayOtp(secret);
+                intervalId = setInterval(() => {
+                    const currentSeconds = new Date().getSeconds();
+                    if (currentSeconds % 30 === 0) generateAndDisplayOtp(secret);
+                }, 1000); // Check every second if it's time to update the OTP
+            } else {
+                document.getElementById('otpOutput').innerText = 'Please provide a valid secret key.';
+            }
+        }
+
+        async function generateAndDisplayOtp(secret) {
+            const otp = await generateOtp(secret);
+            document.getElementById('otpOutput').innerText = otp;
+        }
+
+        function copyOtp() {
+            const otpText = document.getElementById('otpOutput').innerText;
+            if (otpText && otpText !== 'Your OTP will appear here.') {
+                navigator.clipboard.writeText(otpText).then(() => {
+                    const indicator = document.getElementById('copiedIndicator');
+                    indicator.style.display = 'block';
+                    setTimeout(() => indicator.style.display = 'none', 1500);
+                });
+            }
+        }
+
+        function getSecretKey() {
+            const keySelection = document.getElementById('keySelection').value;
+            if (keySelection === 'default') {
+                return defaultSecret;
+            } else {
+                return document.getElementById('secret').value.trim();
+            }
+        }
+
+        // Event listener for dropdown selection change
+        document.getElementById('keySelection').addEventListener('change', function() {
+            const inputField = document.getElementById('secret');
+            if (this.value === 'custom') {
+                inputField.style.display = 'block';
+                inputField.addEventListener('input', startGeneratingOtp);
+            } else {
+                inputField.style.display = 'none';
+                inputField.value = ''; // Clear any existing input
+                startGeneratingOtp();
+            }
+        });
+
+        // Start OTP generation with the default key on page load
+        window.onload = () => {
+            startGeneratingOtp();
+            updateTimer(); // Start the timer alignment immediately on load
+        };
+
+        // Event listener to copy OTP when clicked
+        document.getElementById('otpOutput').addEventListener('click', copyOtp);
+    </script>
+</body>
+</html>
