@@ -1,7 +1,7 @@
 {
     "name": "Coin Flip",
     "short_name": "Coin Flip",
-    "start_url": "coinflip.html",
+    "start_url": "/coinflip/",
     "display": "standalone",
     "background_color": "#f4f4f9",
     "theme_color": "#f4f4f9",
