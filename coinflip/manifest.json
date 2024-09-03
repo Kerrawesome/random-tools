@@ -7,7 +7,7 @@
     "theme_color": "#f4f4f9",
     "icons": [
         {
-            "src": "coin-display.png",
+            "src": "https://em-content.zobj.net/source/twitter/348/coin_1fa99.png",
             "sizes": "512x512",
             "type": "image/png"
         }
