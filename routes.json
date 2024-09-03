@@ -1,10 +1,10 @@
 [
   {
     "route": "/authenticator",
-    "file": "/authenticator/authenticator.html"
+    "file": "/authenticator/index.html"
   },
   {
     "route": "/coinflip",
-    "file": "/coinflip/coinflip.html"
+    "file": "/coinflip/index.html"
   }
 ]
