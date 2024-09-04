@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="/coinflip/manifest.json">
     <link rel="icon" href="https://em-content.zobj.net/source/twitter/348/coin_1fa99.png" type="image/png">
-	<audio id="success-sound" src="https://themushroomkingdom.net/sounds/wav/smb3/smb3_nspade_match.wav" preload="auto"></audio>
+    <audio id="success-sound" src="https://themushroomkingdom.net/sounds/wav/smb3/smb3_nspade_match.wav" preload="auto"></audio>
     <title>Coin Flip</title>
     <style>
         body {
@@ -19,7 +19,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f4f4f9;
-		overflow: hidden;
+            overflow: hidden;
         }
         h1 {
             margin-bottom: 20px;
@@ -34,20 +34,19 @@
             height: 100%;
             max-width: 300px;
             cursor: pointer;
-            transition: opacity 0.3s ease-in-out; /* Added opacity transition */
+            transition: opacity 0.3s ease-in-out;
             opacity: 1;
-            outline: none; /* Remove default outline */
-            user-select: none; /* Prevent text selection on double-click */
-			-webkit-user-select: none; /* Safari */
-			-moz-user-select: none; /* Firefox */
-			-ms-user-select: none; /* Internet Explorer/Edge */
-			user-drag: none; /* Prevent image dragging */
-			touch-action: manipulation; /* Prevent default touch actions */
-			-webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
-}
+            outline: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-drag: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         #coin:focus {
-            outline: none; /* Ensure no outline on focus */
+            outline: none;
         }
         #result {
             margin-top: 20px;
@@ -58,8 +57,15 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
+        .error-message {
+            font-size: 14px;
+            color: red;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
         .spin {
-            animation: continuous-spin 1s linear infinite; /* Continuous spin animation */
+            animation: continuous-spin 1s linear infinite;
         }
         @keyframes continuous-spin {
             0% { transform: rotateY(0deg); }
@@ -85,80 +91,76 @@
 <body>
     <h1>Coin Flip</h1>
     <div class="coin-container">
-        <img id="coin" src="tails.png" alt="Coin" tabindex="0">
+        <img id="coin" src="heads.png" alt="Coin" tabindex="0">
         <p id="result"></p>
         <p class="loading" id="loading">Loading...</p>
+        <p class="error-message" id="error-message"></p>
     </div>
 
     <div class="info-block">
-        <p>True random number from atmospheric noise provided by <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">random.org</span>
+        <p>Random number generated cryptographically
         </p>
+		<p>from <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">crypto.getRandomValues()</span></p>
         <div class="code-block" id="codeOutput" style="text-align: center;"></div>
     </div>
 
     <script>
-	const coin = document.getElementById('coin');
-	const result = document.getElementById('result');
-	const successSound = document.getElementById('success-sound'); // Get the audio element
-		let isFlipping = false; // Flag to control click during flipping
+        const coin = document.getElementById('coin');
+        const result = document.getElementById('result');
+        const errorMessage = document.getElementById('error-message');
+        const successSound = document.getElementById('success-sound');
+        let isFlipping = false;
 
-		// Images URLs (local paths)
-		const headsURL = 'heads.png';
-		const tailsURL = 'tails.png';
+        // Images URLs (local paths)
+        const headsURL = 'heads.png';
+        const tailsURL = 'tails.png';
 
-		// Function to flip the coin
-		function flipCoin() {
-			if (isFlipping) return; // Prevent further clicks during flip
-			isFlipping = true; // Set flipping state
-			coin.classList.add('spin');
-			result.style.opacity = 0; // Hide result text smoothly
+        // Function to flip the coin
+        function flipCoin() {
+            if (isFlipping) return; // Prevent further clicks during flip
+            isFlipping = true; // Set flipping state
+            coin.classList.add('spin');
+            result.style.opacity = 0; // Hide result text smoothly
+            errorMessage.style.opacity = 0; // Hide error message if any
 
-			// Fetch random number from random.org
-			fetch('https://www.random.org/integers/?num=1&min=0&max=1&col=1&base=10&format=plain&rnd=new')
-				.then(response => response.text())
-				.then(data => {
-					// Fade out the coin before switching images
-					coin.style.opacity = 0;
+            // Use crypto.getRandomValues() to generate a random 0 or 1
+            const array = new Uint8Array(1);
+            crypto.getRandomValues(array);
+            const randomNumber = array[0] % 2; // Get a random 0 or 1
 
-					setTimeout(() => {
-						// Update coin image and result text based on API response
-						if (data.trim() === '0') {
-							coin.src = tailsURL; // Tails
-							result.textContent = 'TAILS';
-						} else {
-							coin.src = headsURL; // Heads
-							result.textContent = 'HEADS';
-						}
-						
-						// Update code output to show the random number
-						codeOutput.innerHTML = `Number generated: <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">${data.trim()}</span>`;
+            // Fade out the coin before switching images
+            coin.style.opacity = 0;
 
-						// Play the success sound
-						successSound.currentTime = 0; // Reset sound to start
-						successSound.play(); // Play the sound
+            setTimeout(() => {
+                // Update coin image and result text based on the random number
+                if (randomNumber === 0) {
+                    coin.src = tailsURL; // Tails
+                    result.textContent = 'TAILS';
+                } else {
+                    coin.src = headsURL; // Heads
+                    result.textContent = 'HEADS';
+                }
+                
+                // Update code output to show the random number generated
+                codeOutput.innerHTML = `Random number generated: <span style="background-color: #e0e0e0; padding: 2px 4px; border-radius: 3px; font-family: monospace;">${randomNumber}</span>`;
 
-						// Fade in the coin after switching images
-						coin.style.opacity = 1;
-						result.style.opacity = 1; // Show result text smoothly
-						coin.classList.remove('spin'); // Stop spinning after showing the result
-						isFlipping = false; // Re-enable clicking after animation
-					}, 300); // Delay image change to allow fade-out (0.3s matches opacity transition)
-				})
-				.catch(error => {
-					result.textContent = 'Error: Could not fetch random number!';
-					result.style.opacity = 1; // Show error message
-					codeOutput.textContent = 'Output: Error';
-					console.error('Error fetching random number:', error);
-					coin.classList.remove('spin'); // Stop spinning on error
-					isFlipping = false; // Re-enable clicking even on error
-				});
-		}
+                // Play the success sound
+                successSound.currentTime = 0;
+                successSound.play();
 
-		// Initial display of heads side
-		coin.src = headsURL;
+                // Fade in the coin after switching images
+                coin.style.opacity = 1;
+                result.style.opacity = 1;
+                coin.classList.remove('spin');
+                isFlipping = false; // Re-enable clicking after animation
+            }, 300); // Delay image change to allow fade-out
+        }
 
-		// Add event listener to the coin image
-		coin.addEventListener('click', flipCoin);
+        // Initial display of heads side
+        coin.src = headsURL;
+
+        // Add event listener to the coin image
+        coin.addEventListener('click', flipCoin);
     </script>
 </body>
 </html>
