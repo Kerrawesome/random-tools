@@ -46,7 +46,6 @@
     const files = [
         { path: '/authenticator/index.html', text: 'Authenticator' },
         { path: '/coinflip/index.html', text: 'Coin Flip' }
-        { path: 'https://cantonese.org/', text: 'Cantonese.org' }
     ];
 
     // Reference to the UL element
@@ -58,9 +57,6 @@
         const link = document.createElement('a');
         link.href = file.path;
         link.textContent = file.text; // Use custom text for the link
-        if (file.path.startsWith('http')) {
-        link.target = '_blank'; // Opens external links in a new tab
-    } 
         listItem.appendChild(link);
         list.appendChild(listItem);
     });
