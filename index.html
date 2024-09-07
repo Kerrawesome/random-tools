@@ -23,44 +23,66 @@
         h1 {
             margin-bottom: 20px;
         }
+        h2 {
+            margin: 20px 0 10px;
+        }
         ul {
             list-style-type: none;
             padding: 0;
-            display: flex; 
-            gap: 20px; 
+            display: flex;
+            gap: 10px; 
         }
-        
         li {
             margin: 5px 0;
         }
     </style>
 </head>
 <body>
-<img src="https://em-content.zobj.net/source/twitter/348/hammer-and-wrench_1f6e0-fe0f.png" alt="Kerrawesome's Tools" style="width: 100px; height: auto;">
+    <img src="https://em-content.zobj.net/source/twitter/348/hammer-and-wrench_1f6e0-fe0f.png" alt="Kerrawesome's Tools" style="width: 100px; height: auto;">
     <h1>Kerrawesome's Tools</h1>
-    <p>A collection of useful tools, made by Kerrawesome.</p>
-    <ul id="directory-list"></ul>
+    <p>A collection of useful tools by Kerrawesome.</p>
+
+    <h2>Homemade Tools</h2>
+    <ul id="tools-list"></ul>
+
+    <h2>Useful Tools</h2>
+    <ul id="useful-list"></ul>
 
     <script>
-        // Array of objects with file paths and custom text
-    const files = [
-        { path: '/authenticator/index.html', text: 'Authenticator' },
-        { path: '/coinflip/index.html', text: 'Coin Flip' },
-        { path: '/android/index.html', text: 'Android on Web' }
-    ];
+        // Arrays of objects with file paths and custom text
+        const tools = [
+            { path: '/authenticator/index.html', text: 'Authenticator' },
+            { path: '/coinflip/index.html', text: 'Coin Flip' }
+        ];
 
-    // Reference to the UL element
-    const list = document.getElementById('directory-list');
+        const useful = [
+            { path: '/android/index.html', text: 'Android on Web' },
+            { path: '/minecraft/index.html', text: 'Minecraft on Web' }
+        ];
 
-    // Generate list items for each file
-    files.forEach(file => {
-        const listItem = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = file.path;
-        link.textContent = file.text; // Use custom text for the link
-        listItem.appendChild(link);
-        list.appendChild(listItem);
-    });
-</script>
+        // Reference to the UL elements
+        const toolsList = document.getElementById('tools-list');
+        const usefulList = document.getElementById('useful-list');
+
+        // Generate list items for each tool
+        tools.forEach(tool => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = tool.path;
+            link.textContent = tool.text; // Use custom text for the link
+            listItem.appendChild(link);
+            toolsList.appendChild(listItem);
+        });
+
+        // Generate list items for each game
+        useful.forEach(game => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = game.path;
+            link.textContent = game.text; // Use custom text for the link
+            listItem.appendChild(link);
+            usefulList.appendChild(listItem);
+        });
+    </script>
 </body>
 </html>
