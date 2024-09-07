@@ -1,7 +1,7 @@
 {
     "name": "Android on Web",
     "short_name": "Android Web",
-    "start_url": "/android-web/",
+    "start_url": "/android/",
     "display": "standalone",
     "background_color": "#f4f4f9",
     "theme_color": "#f4f4f9",
