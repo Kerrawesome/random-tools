@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://em-content.zobj.net/source/twitter/348/satellite-antenna_1f4e1.png" type="image/png">
+    <title>Android on Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            overflow: hidden;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex; 
+            gap: 20px; 
+        }
+        li {
+            margin: 5px 0;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+		
+		.code {
+			background-color: #e0e0e0;
+			padding: 2px 4px;
+			border-radius: 3px;
+			font-family: monospace;
+	}
+	
+        iframe {
+            width: 90vmin; /* Larger size for better scaling */
+            height: 90vmin; /* Ensures the iframe remains a square */
+            border: none;
+            margin-top: 20px;
+			margin-bottom: 20px;
+			border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Android on Web</h1>
+	<p>Public Android emulator from <span class="code">stream.uptoplay.com</span> </p>
+	<p><strong>DO NOT</strong> enter private information, including logins.</p>
+
+    <select id="serverSelect" onchange="loadServer()">
+        <option value="" disabled selected>Select a server</option>
+        <!-- Options will be generated dynamically by JavaScript -->
+    </select>
+
+    <iframe id="serverFrame" src="" style="display: none;"></iframe>
+
+    <script>
+        // Generate dropdown options for servers 53 to 80
+        const select = document.getElementById('serverSelect');
+        for (let i = 53; i <= 80; i++) {
+            const option = document.createElement('option');
+            option.value = `https://stream.uptoplay.net/osessionx${i}/#/client/REVGQVVMVABjAGRlZmF1bHQ=?username=guest03&password=server0103`;
+            option.textContent = `Server ${i}`;
+            select.appendChild(option);
+        }
+
+        // Load the selected server URL in the iframe
+        function loadServer() {
+            const iframe = document.getElementById('serverFrame');
+            const selectedValue = select.value;
+            if (selectedValue) {
+                iframe.src = selectedValue;
+                iframe.style.display = 'block';
+            } else {
+                iframe.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
