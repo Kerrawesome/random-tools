@@ -19,6 +19,7 @@
             margin: 0;
             background-color: #f4f4f9;
             overflow: hidden;
+		max-width: 100vw;
         }
         h1 {
             margin-bottom: 20px;
@@ -29,42 +30,44 @@
             border-radius: 3px;
             font-family: monospace;
         }
-        iframe {
-            width: 90vmin;
-            height: 90vmin;
-            border: none;
-        }
-        select {
-            padding: 10px;
-            font-size: 16px;
+        .controls {
+            display: flex;
+            gap: 15px; /* Increased gap for better spacing */
             margin-bottom: 20px;
         }
-        button {
-            padding: 10px 20px;
+        select, button {
+            padding: 10px;
             font-size: 16px;
-            margin-top: 20px;
-            margin-bottom: 30px;
             cursor: pointer;
             border-radius: 5px;
         }
         button:active {
             background-color: #45a049;
         }
+        iframe {
+            width: 90vmin; /* Use vmin to maintain square ratio on smaller screens */
+            height: 90vmin; /* Use vmin to maintain square ratio on smaller screens */
+            background-color: #ffffff;
+            border: none;
+            margin-bottom: 20px;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
     <h1>Minecraft on Web</h1>
-    <p>Minecraft Java Edition <span class="code">1.8</span> compiled from <span class="code">eaglercraft.com</span></p>
+    <p>Minecraft Java Edition <span class="code">1.8</span> from <span class="code">eaglercraft.com</span></p>
 
-    <select id="serverSelect" onchange="loadServer()">
-        <option value="browser.html" selected>Browser Version</option>
-        <option value="browser-controls.html">Mobile Version</option>
-    </select>
+    <div class="controls">
+        <select id="serverSelect" onchange="loadServer()">
+            <option value="browser.html" selected>Browser Version</option>
+            <option value="browser-controls.html">Mobile Version</option>
+        </select>
+        <button id="fullscreenBtn" onclick="makeFullscreen()">Fullscreen</button>
+    </div>
 
-    <iframe id="serverFrame" src="browser.html" tabindex="0"></iframe> <!-- Default to browser.html -->
-
-    <button id="fullscreenBtn" onclick="makeFullscreen()">Fullscreen</button>
+    <iframe id="serverFrame" src="browser.html" tabindex="0"></iframe>
 
     <script>
         // Load the selected version HTML file in the iframe
