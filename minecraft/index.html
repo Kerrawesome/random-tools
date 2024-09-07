@@ -19,7 +19,7 @@
             margin: 0;
             background-color: #f4f4f9;
             overflow: hidden;
-        }
+        } 
         h1 {
             margin-bottom: 20px;
         }
@@ -65,7 +65,38 @@
     <iframe id="serverFrame" src="browser.html"></iframe> <!-- Default to browser.html -->
 
     <button id="fullscreenBtn" onclick="makeFullscreen()">Fullscreen</button>
+    
+    <script>
+    // Function to inject dialog override scripts into the iframe
+    function preventDialogsInIframe(iframe) {
+        if (!iframe.contentWindow) return;
 
+        // Create a script element to override dialog functions
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.text = `
+            window.alert = function(message) {
+                console.log("Iframe Alert prevented:", message);
+            };
+            window.prompt = function(message, defaultValue) {
+                console.log("Iframe Prompt prevented:", message);
+                return null; // or return a default value if needed
+            };
+            window.confirm = function(message) {
+                console.log("Iframe Confirm prevented:", message);
+                return false; // or true, depending on how you want to handle confirmations
+            };
+        `;
+
+        // Append the script to the iframe's document
+        iframe.contentWindow.document.head.appendChild(script);
+    }
+
+    // Add event listener to inject the script after the iframe loads
+    document.getElementById('serverFrame').addEventListener('load', function () {
+        preventDialogsInIframe(this);
+    });
+</script>
     <script>
         // Load the selected version HTML file in the iframe
         function loadServer() {
