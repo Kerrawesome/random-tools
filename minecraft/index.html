@@ -19,9 +19,9 @@
             margin: 0;
             background-color: #f4f4f9;
             overflow: hidden;
-        } 
+        }
         h1 {
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
         }
         .code {
             background-color: #e0e0e0;
@@ -62,10 +62,10 @@
         <option value="browser-controls.html">Mobile Version</option>
     </select>
 
-    <iframe id="serverFrame" src="browser.html"></iframe> <!-- Default to browser.html -->
+    <iframe id="serverFrame" src="browser.html" tabindex="0"></iframe> <!-- Default to browser.html -->
 
     <button id="fullscreenBtn" onclick="makeFullscreen()">Fullscreen</button>
-    
+
     <script>
         // Load the selected version HTML file in the iframe
         function loadServer() {
@@ -87,7 +87,31 @@
             } else if (iframe.msRequestFullscreen) { // IE/Edge
                 iframe.msRequestFullscreen();
             }
+            // Focus the iframe when entering fullscreen
+            iframe.focus();
         }
+
+        // Ensure the iframe is focused when clicked or tapped
+        document.getElementById('serverFrame').addEventListener('click', function () {
+            this.focus();
+        });
+
+        // Focus the iframe when it loads
+        document.getElementById('serverFrame').addEventListener('load', function () {
+            this.contentWindow.focus();
+        });
+
+        // Handle keyboard focus when the user interacts with the document
+        window.addEventListener('keydown', function() {
+            const iframe = document.getElementById('serverFrame');
+            iframe.focus();
+        });
+
+        // Handle touch input focus for mobile devices
+        window.addEventListener('touchstart', function() {
+            const iframe = document.getElementById('serverFrame');
+            iframe.focus();
+        });
     </script>
 
 </body>
