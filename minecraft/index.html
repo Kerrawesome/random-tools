@@ -34,7 +34,7 @@
         .controls {
             display: flex;
             gap: 20px;
-			margin-top: 15px;
+            margin-top: 15px;
         }
         select, button {
             padding: 10px;
@@ -59,18 +59,23 @@
     <p>Minecraft Java Edition <span class="code">1.8</span> from <span class="code">eaglercraft.com</span></p>
 
     <div class="controls">
+        <select id="versionSelect">
+            <option value="1.8" selected>v1.8</option>
+            <option value="1.5">v1.5</option>
+        </select>
         <select id="serverSelect">
-            <option value="browser.html" selected>Browser Version</option>
-            <option value="browser-controls.html">Mobile Version</option>
+            <option value="browser.html" selected>Browser</option>
+            <option value="browser-controls.html">Mobile</option>
         </select>
         <button onclick="launchMinecraft()">Launch Minecraft</button>
     </div>
 
     <script>
-        // Function to open the selected version HTML file in the current tab
+        // Function to open the selected version and server HTML file in the current tab
         function launchMinecraft() {
-            const selectedValue = document.getElementById('serverSelect').value;
-            window.location.href = selectedValue;
+            const version = document.getElementById('versionSelect').value;
+            const server = document.getElementById('serverSelect').value;
+            window.location.href = `./${version}/${server}`;
         }
     </script>
 
