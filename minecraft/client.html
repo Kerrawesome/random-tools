@@ -26,6 +26,26 @@
     </style>
 </head>
 <body>
-    <iframe src="https://eaglercraft.q13x.com/" allowfullscreen></iframe>
+    <iframe id="minecraft-iframe" src="https://eaglercraft.q13x.com/" allowfullscreen></iframe>
+
+    <script>
+        // Function to focus the iframe continuously
+        function focusIframe() {
+            const iframe = document.getElementById('minecraft-iframe');
+            if (iframe && iframe.contentWindow) {
+                try {
+                    iframe.contentWindow.focus();
+                } catch (e) {
+                    console.error('Error focusing iframe:', e);
+                }
+            }
+        }
+
+        // Set an interval to ensure the iframe is always focused
+        setInterval(focusIframe, 100);
+        
+        // Automatically focus on load
+        window.onload = focusIframe;
+    </script>
 </body>
 </html>
