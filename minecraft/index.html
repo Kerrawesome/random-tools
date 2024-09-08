@@ -49,6 +49,9 @@
             width: 100px;
             height: 100px;
         }
+        select option[disabled] {
+            font-weight: bold;
+        } 
     </style>
 </head>
 <body>
@@ -56,12 +59,14 @@
     <img src="https://minecraft.wiki/images/thumb/Bedrock_Edition_App_Store_icon_2.png/512px-Bedrock_Edition_App_Store_icon_2.png" alt="Minecraft Icon" class="icon">
 
     <h1>Minecraft on Web</h1>
-    <p>Minecraft Java Edition <span class="code">1.8</span> from <span class="code">eaglercraft.com</span></p>
+    <p>Minecraft Java Edition from <span class="code">eaglercraft.com</span></p>
 
     <div class="controls">
         <select id="serverSelect">
-            <option value="minecraft-1.8.html" selected>1.8</option>
-            <option value="minecreaft-1.5.html">1.5</option>
+            <option value="client.html" selected>v1.8 client</option>
+			 <option disabled>Offline</option>
+			<option value="offline-1.8.html">1.8</option>
+            <option value="offline-1.5.html">1.5</option>
         </select>
         <button onclick="launchMinecraft()">Launch Minecraft</button>
     </div>
