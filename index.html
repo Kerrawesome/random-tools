@@ -46,23 +46,30 @@
 
     <h2>Useful Tools</h2>
     <ul id="useful-list"></ul>
+	
+	<h2>Projects and Tools</h2>
+	<ul id="other-list"></ul>
 
     <script>
         // Arrays of objects with file paths and custom text
         const tools = [
             { path: '/authenticator/index.html', text: 'Authenticator' },
-            { path: '/coinflip/index.html', text: 'Coin Flip' },
-            { path: '/pizza/index.html', text: 'PizzaHut Codes' }
+            { path: '/coinflip/index.html', text: 'Coin Flip' }
         ];
 
         const useful = [
             { path: '/android/index.html', text: 'Android on Web' },
             { path: '/minecraft/index.html', text: 'Minecraft on Web' }
         ];
+		
+		const other = [
+            { path: '/pizza/index.html', text: 'PizzaHut Codes' }
+        ];
 
         // Reference to the UL elements
         const toolsList = document.getElementById('tools-list');
         const usefulList = document.getElementById('useful-list');
+		const otherList = document.getElementById('other-list');
 
         // Generate list items for each tool
         tools.forEach(tool => {
@@ -74,14 +81,22 @@
             toolsList.appendChild(listItem);
         });
 
-        // Generate list items for each game
-        useful.forEach(game => {
+        useful.forEach(useful => {
             const listItem = document.createElement('li');
             const link = document.createElement('a');
-            link.href = game.path;
-            link.textContent = game.text; // Use custom text for the link
+            link.href = useful.path;
+            link.textContent = useful.text; // Use custom text for the link
             listItem.appendChild(link);
             usefulList.appendChild(listItem);
+        });
+		
+		other.forEach(other => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = other.path;
+            link.textContent = other.text; // Use custom text for the link
+            listItem.appendChild(link);
+            otherList.appendChild(listItem);
         });
     </script>
 </body>
