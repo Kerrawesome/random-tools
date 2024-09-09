@@ -1894,22 +1894,22 @@ body.HKD #footerCR {padding:4px 0px 0 0px !important;}
   </head>
   <script>
         // Function to generate a random validation code
-        function generateValidationCode() {
-            let code;
-            do {
-                // Generate a random 5-digit number starting with 7 or 8
-                code = Math.floor(Math.random() * 10000) + (Math.random() < 0.5 ? 70000 : 80000);
-            } while (code % 3 !== 0); // Ensure the code is divisible by 3
+function generateValidationCode() {
+    let code;
+    do {
+        // Generate a random 5-digit number between 70000 and 79999
+        code = Math.floor(Math.random() * 10000) + 70000;
+    } while (code % 3 !== 0); // Ensure the code is divisible by 3
 
-            return code;
-        }
+    return code;
+}
 
-        // Assign the generated code to the appropriate HTML element
-        document.addEventListener("DOMContentLoaded", function() {
-            const validationCode = generateValidationCode(); // Generate the code
-            const codeElement = document.querySelector('.ValCode'); // Find the element where the code should be displayed
-            codeElement.textContent = `Validation Code: ${validationCode}`; // Set the generated code
-        });
+// Assign the generated code to the appropriate HTML element
+document.addEventListener("DOMContentLoaded", function() {
+    const validationCode = generateValidationCode(); // Generate the code
+    const codeElement = document.querySelector('.ValCode'); // Find the element where the code should be displayed
+    codeElement.textContent = `Validation Code: ${validationCode}`; // Set the generated code
+});
     </script>
   <body class="NZL en-GB ST_URL VTKnown_N HR_Y NZLen-GB HasConnect=N HasSocial=N GBRTestFlag_N IncentiveType_Bounce BreezeStatus_Y BreezeStatus_Y_NZL BreezeStatus_Y_en-GB BreezeFinish_ BreezeFinish__en-GB OCRF_Y ScaleCounter_2 ChickenStripsFlag_{ChickenStripsFlag} lightSurvey Survey DesktopMode">
     <div id="outerframe" class="BrandedRblEnabled BrandedOptEnabled">
