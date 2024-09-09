@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Pizza_Hut_international_logo_2014.svg/512px-Pizza_Hut_international_logo_2014.svg.png" type="image/png">
+    <title>Pizza Hut New Zealand Guest Experience Survey</title>
+
+    <style>
+        /* Ensure the iframe takes up the full viewport */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- The iframe element will be dynamically updated with the correct source by JavaScript -->
+    <iframe id="promoFrame" allowfullscreen></iframe>
+
+     <script>
+        // Function to detect if the device is a common mobile device
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            // List of common mobile user agents
+            const mobileAgents = [
+                /Android/i,
+                /webOS/i,
+                /iPhone/i,
+                /iPad/i,
+                /iPod/i,
+                /BlackBerry/i,
+                /Windows Phone/i
+            ];
+
+            // Check if any of the mobile user agents are present in the user agent string
+            return mobileAgents.some(agent => agent.test(userAgent));
+        }
+
+        // Get the iframe element
+        const promoFrame = document.getElementById('promoFrame');
+
+        // Set the iframe source based on the device type
+        if (isMobileDevice()) {
+            promoFrame.src = 'promotion-small.html';
+        } else {
+            promoFrame.src = 'promotion-browser.html';
+        }
+    </script>
+</body>
+</html>
