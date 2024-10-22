@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <title>Android Emulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f4f4f9;
+            overflow-x: hidden;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex; 
+            gap: 20px; 
+        }
+        li {
+            margin: 5px 0;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .code {
+            background-color: #e0e0e0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .controls {
+            display: flex;
+            gap: 15px; /* Increased gap for better spacing */
+            margin-bottom: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:active {
+            background-color: #45a049;
+        }
+        iframe {
+            width: 90vmin; /* Larger size for better scaling */
+            height: 90vmin; /* Ensures the iframe remains a square */
+            border: none;
+            margin-bottom: 20px;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Android on Web</h1>
+    <p>Public Android emulator from <span class="code">stream.uptoplay.com</span></p>
+
+    <div class="controls">
+        <select id="serverSelect" onchange="loadServer()">
+            <option value="" disabled selected>Select a server</option>
+            <!-- Options will be generated dynamically by JavaScript -->
+        </select>
+        <button id="fullscreenBtn" onclick="makeFullscreen()">Fullscreen</button>
+    </div>
+
+    <iframe id="serverFrame" src="" style="display: none;" tabindex="0"></iframe>
+
+    <script>
+        // Generate dropdown options for servers 53 to 80
+        const select = document.getElementById('serverSelect');
+        for (let i = 53; i <= 80; i++) {
+            const option = document.createElement('option');
+            option.value = `https://stream.uptoplay.net/osessionx${i}/#/client/REVGQVVMVABjAGRlZmF1bHQ=?username=guest03&password=server0103`;
+            option.textContent = `Server ${i}`;
+            select.appendChild(option);
+        }
+
+        // Load the selected server URL in the iframe
+        function loadServer() {
+            const iframe = document.getElementById('serverFrame');
+            const selectedValue = select.value;
+            if (selectedValue) {
+                iframe.src = selectedValue;
+                iframe.style.display = 'block';
+                iframe.focus();
+            } else {
+                iframe.style.display = 'none';
+            }
+        }
+
+        // Function to make the iframe fullscreen
+        function makeFullscreen() {
+            const iframe = document.getElementById('serverFrame');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+            // Focus the iframe when entering fullscreen
+            iframe.focus();
+        }
+
+        // Ensure the iframe is focused when clicked or tapped
+        document.getElementById('serverFrame').addEventListener('click', function () {
+            this.focus();
+        });
+
+        // Focus the iframe when it loads
+        document.getElementById('serverFrame').addEventListener('load', function () {
+            this.contentWindow.focus();
+        });
+
+        // Handle keyboard focus when the user interacts with the document
+        window.addEventListener('keydown', function() {
+            const iframe = document.getElementById('serverFrame');
+            iframe.focus();
+        });
+
+        // Handle touch input focus for mobile devices
+        window.addEventListener('touchstart', function() {
+            const iframe = document.getElementById('serverFrame');
+            iframe.focus();
+        });
+    </script>
+
+</body>
+</html>
