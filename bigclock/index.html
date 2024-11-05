@@ -73,7 +73,7 @@
             clockElement.textContent = `${hours}:${minutes}:${seconds}`;
 
             const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
-            const fullDate = now.toLocaleDateString(undefined, options);
+            const fullDate = now.toLocaleDateString("en-GB", options);
             dateElement.textContent = fullDate;
         }
 
