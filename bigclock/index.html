@@ -72,7 +72,7 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             clockElement.textContent = `${hours}:${minutes}:${seconds}`;
 
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
             const fullDate = now.toLocaleDateString(undefined, options);
             dateElement.textContent = fullDate;
         }
