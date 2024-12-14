@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Text to URL</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f4f4f9;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        overflow: hidden; /* Prevent page scrolling */
+    }
+    h1 {
+        margin-bottom: 20px;
+    }
+    textarea {
+        width: 90%;
+        height: 90%;
+        max-width: 100%;
+        max-height: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        overflow: auto; /* Allow scrolling inside the textarea */
+    }
+    .info {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Text-to-URL Appender</h1>
+  <p>Enter text below to append it to the URL:</p>
+  <textarea id="textInput" placeholder="Type something..."></textarea>
+  <p class="info">The text you type will be encoded and appended to the current URL. Share the URL to share your text.</p>
+
+  <script>
+    let debounceTimeout;
+
+    function updateURL() {
+      // Get the input value
+      const textInput = document.getElementById('textInput').value;
+
+      // Encode the text for URL safety
+      const encodedText = encodeURIComponent(textInput);
+
+      // Get the current URL without any existing hash
+      const baseUrl = window.location.origin + window.location.pathname;
+
+      // Update the URL to include the encoded text
+      const newUrl = `${baseUrl}#${encodedText}`;
+      
+      // Update the URL in the address bar without reloading the page
+      window.history.replaceState(null, '', newUrl);
+    }
+
+    // Debounce input changes to avoid frequent URL updates
+    document.getElementById('textInput').addEventListener('input', () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(updateURL, 300); // 300ms debounce delay
+    });
+
+    // On page load, check if there's existing text in the URL and decode it
+    window.addEventListener('DOMContentLoaded', () => {
+      const currentHash = window.location.hash;
+      if (currentHash) {
+        const decodedText = decodeURIComponent(currentHash.substring(1));
+        document.getElementById('textInput').value = decodedText;
+      }
+    });
+  </script>
+</body>
+</html>
